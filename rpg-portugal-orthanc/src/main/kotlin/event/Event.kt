@@ -2,13 +2,10 @@ package org.rpgportugal.orthanc.event
 
 import discord4j.core.GatewayDiscordClient
 import discord4j.core.event.domain.Event
-import kotlin.reflect.KClass
-
-typealias RegisterEvent = (GatewayDiscordClient) -> Unit
+import reactor.core.Disposable
 
 object Event {
-    infix fun <E: Event> KClass<E>.subscribe(handler: (E) -> Unit) : RegisterEvent =
-        { it.on(this.java).subscribe(handler) }
-
+    inline infix fun <reified E: Event> GatewayDiscordClient.handle(crossinline handler: (E) -> Unit): Disposable =
+        on(E::class.java).subscribe { handler(it) }
 }
 
