@@ -1,4 +1,5 @@
-resources
+# ignore all resources on main but leave in test resources. Warn: do not put tokens on tests
+**/src/main/resources
 
 # Created by https://www.toptal.com/developers/gitignore/api/kotlin,gradle,intellij+all,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=kotlin,gradle,intellij+all,java
