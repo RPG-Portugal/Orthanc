@@ -4,7 +4,7 @@ import org.rpgportugal.logging.*
 import discord4j.common.util.Snowflake
 import discord4j.core.GatewayDiscordClient
 
-class SendMessageJob(override val client: GatewayDiscordClient) : OrthancJob {
+class SendMessageJob(override val client: GatewayDiscordClient) : OrthancJob, Logging {
 
     companion object {
         const val CHANNEL_ID: String = "channelId"
@@ -19,8 +19,7 @@ class SendMessageJob(override val client: GatewayDiscordClient) : OrthancJob {
             messageArg?.let { message ->
                 client.getChannelById(channelId).subscribe { channel ->
                     channel.restChannel.createMessage(message).subscribe {
-                        // TODO: replace with logging
-                        println("Sent '$message' to channel '$channelId'")
+                        log.info("Sent '$message' to channel '$channelId'")
                     }
                 }
             }
