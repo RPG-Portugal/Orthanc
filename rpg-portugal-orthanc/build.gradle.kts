@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":rpg-portugal-core"))
     implementation(project(":rpg-portugal-configuration"))
     implementation(project(":rpg-portugal-jobs"))
+    implementation(project(":rpg-portugal-logging"))
     // kotlin extensions
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.4")

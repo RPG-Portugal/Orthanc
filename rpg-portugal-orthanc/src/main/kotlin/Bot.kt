@@ -7,11 +7,14 @@ import discord4j.gateway.intent.IntentSet
 import kotlinx.collections.immutable.persistentHashMapOf
 import org.rpgportugal.jobs.JobType
 import org.rpgportugal.jobs.Scheduling
+import org.rpgportugal.logging.getLogger
 import org.rpgportugal.orthanc.configuration.Configuration
 import org.rpgportugal.orthanc.event.Event.handle
 import org.rpgportugal.orthanc.exception.BotInitializationException
 import org.rpgportugal.orthanc.jobs.RemoveRolesJob
 import org.rpgportugal.orthanc.jobs.SendMessageJob
+
+val logger = getLogger("Orthanc Main")
 
 fun logInAsAdmin(token: String): GatewayDiscordClient {
     return DiscordClient.create(token)
@@ -21,10 +24,8 @@ fun logInAsAdmin(token: String): GatewayDiscordClient {
         .block() ?: throw BotInitializationException("Discord client is `null` on log in.")
 }
 
-val botConfiguration = Configuration.loadBotConfiguration()
-
+val token = Configuration.loadDiscordToken()
 val jobs = Configuration.loadJobInfo()
-
 
 class JobRegistry(client: GatewayDiscordClient) {
     private val jobTypes: Map<String, JobType> = persistentHashMapOf(
@@ -37,14 +38,20 @@ class JobRegistry(client: GatewayDiscordClient) {
 }
 
 fun main() {
-    val client = logInAsAdmin(botConfiguration.discord.token)
-    client.handle<MessageCreateEvent> { println(it.message) }
 
+    logger.info("Logging into discord...")
+    val client = logInAsAdmin(token)
+
+    logger.info("Initializing Event Handlers...")
+    client.handle<MessageCreateEvent> { logger.info("${it.message}") }
+
+    logger.info("Initializing Jobs...")
     val registry = JobRegistry(client)
     jobs.forEach {
-        println("Scheduling ${it.type} job $it")
+        logger.info("Scheduling ${it.type} job $it")
         Scheduling.schedule(it, registry::get)
     }
 
+    logger.info("Running.")
     client.onDisconnect().block()
 }

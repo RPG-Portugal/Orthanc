@@ -1,5 +1,6 @@
 package org.rpgportugal.orthanc.jobs
 
+import org.rpgportugal.logging.*
 import discord4j.common.util.Snowflake
 import discord4j.core.GatewayDiscordClient
 
@@ -24,10 +25,13 @@ class RemoveRolesJob(override val client: GatewayDiscordClient) : OrthancJob {
                     val name = member.displayName
                     if(intersection.isNotEmpty()) {
                         intersection.forEach {
-                            member.removeRole(it).subscribe {}
+                            member.removeRole(it).subscribe {
+                                if(log.isDebugEnabled) {
+                                    log.debug("role $it removed from $member")
+                                }
+                            }
                         }
-                        // TODO: replace with logging
-                        println("Removed $removedRolesCount roles from '$name'")
+                        log.info("Removed $removedRolesCount roles from '$name'")
                     }
                 }
             }
