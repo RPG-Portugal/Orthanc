@@ -13,7 +13,6 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib"))
     api("org.slf4j:slf4j-api:1.7.+")
-    //api("org.slf4j:slf4j-log4j12:1.7.+")
     implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.14.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
