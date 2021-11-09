@@ -9,3 +9,5 @@ object Event {
         on(E::class.java).subscribe { handler(it) }
 }
 
+typealias Handler<E> = (GatewayDiscordClient, E) -> Unit
+
