@@ -1,7 +1,7 @@
 package org.rpgportugal.configuration.exception
 
-class ConfigurationLoadingException(resourceName: String, message: String, cause: Throwable?)
-    : Exception("Failed to load resource $resourceName: $message", cause) {
+import org.rpgportugal.core.error.ErrorCode
+import org.rpgportugal.core.error.RpgPortugalException
 
-    constructor(resourceName: String, message: String) : this(resourceName, message, null)
-}
+class ConfigurationLoadingException(resourceName: String, message: String, cause: Throwable? = null)
+    : RpgPortugalException("Failed to load resource $resourceName: $message", ErrorCode.ConfigurationLoadingError, cause)
