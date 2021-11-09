@@ -21,10 +21,8 @@ fun logInAsAdmin(token: String): GatewayDiscordClient {
         .block() ?: throw BotInitializationException("Discord client is `null` on log in.")
 }
 
-val botConfiguration = Configuration.loadBotConfiguration()
-
+val token = Configuration.loadDiscordToken()
 val jobs = Configuration.loadJobInfo()
-
 
 class JobRegistry(client: GatewayDiscordClient) {
     private val jobTypes: Map<String, JobType> = persistentHashMapOf(
@@ -37,7 +35,7 @@ class JobRegistry(client: GatewayDiscordClient) {
 }
 
 fun main() {
-    val client = logInAsAdmin(botConfiguration.discord.token)
+    val client = logInAsAdmin(token)
     client.handle<MessageCreateEvent> { println(it.message) }
 
     val registry = JobRegistry(client)

@@ -8,8 +8,8 @@ object Configuration {
     private val json = JsonConfiguration
 
     @Throws(ConfigurationLoadingException::class)
-    fun loadBotConfiguration(filename: String = "bot.json"): BotJsonConfiguration =
-        json.load(filename)
+    fun loadDiscordToken(filename: String = "sensitive/discord.json"): String =
+        json.load<DiscordJsonConfiguration>(filename).token
 
     @Throws(ConfigurationLoadingException::class)
     fun loadJobInfo(filename: String = "jobs.json"): List<JobInfo> =
@@ -17,5 +17,4 @@ object Configuration {
 }
 
 data class DiscordJsonConfiguration(val token: String)
-data class BotJsonConfiguration(val discord: DiscordJsonConfiguration)
 data class JobsJsonConfiguration(val jobs: List<JobInfo>)

@@ -1,0 +1,25 @@
+{
+  "jobs" : [
+    {
+      "type" : "remove-roles",
+      "name" : "Remove punny roles",
+      "cron" :  "0 0 5 1/1 * ? *",
+      "args" : {
+        "guildId": 545549902248149013,
+        "roleIds": [
+          869912722068869230,
+          903020925757300736
+        ]
+      }
+    },
+    {
+      "type" : "send-message",
+      "name" : "Send message to trap channel",
+      "cron" : "0 0/2 * 1/1 * ? *",
+      "args": {
+        "channelId" : 902263570874646608,
+        "message" : "**NÃO ESCREVAM NESTE CANAL** Escrita neste canal resulta num soft ban! Isto é um canal anti-bots, mutem o canal por favor!"
+      }
+    }
+  ]
+}
