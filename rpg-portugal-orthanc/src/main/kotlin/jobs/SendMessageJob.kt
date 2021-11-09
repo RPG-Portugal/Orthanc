@@ -1,5 +1,6 @@
 package org.rpgportugal.orthanc.jobs
 
+import org.rpgportugal.logging.*
 import discord4j.common.util.Snowflake
 import discord4j.core.GatewayDiscordClient
 
