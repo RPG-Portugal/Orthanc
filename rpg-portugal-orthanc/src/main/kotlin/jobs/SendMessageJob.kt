@@ -1,19 +1,30 @@
 package org.rpgportugal.orthanc.jobs
 
+import discord4j.common.util.Snowflake
 import discord4j.core.GatewayDiscordClient
-import org.rpgportugal.orthanc.configuration.SendMessageArgs
 
-class SendMessageJob(override val client: GatewayDiscordClient) : OrthancJob<SendMessageArgs> {
+class SendMessageJob(override val client: GatewayDiscordClient) : OrthancJob {
 
-    override fun run(args: SendMessageArgs) {
-        val channelId = args.channelId
-        val message = args.message
+    companion object {
+        const val CHANNEL_ID: String = "channelId"
+        const val MESSAGE: String = "message"
+    }
 
-        client.getChannelById(channelId).subscribe { channel ->
-            channel.restChannel.createMessage(message).subscribe {
-                // TODO: replace with logging
-                println("Sent '$message' to channel '$channelId'")
+    override fun execute(args: Map<String, Any>) {
+        val channelIdArg = args.getArg(CHANNEL_ID) { Snowflake.of(it as Long) }
+        val messageArg = args.getArg(MESSAGE) { it as String }
+
+        channelIdArg?.let { channelId ->
+            messageArg?.let { message ->
+                client.getChannelById(channelId).subscribe { channel ->
+                    channel.restChannel.createMessage(message).subscribe {
+                        // TODO: replace with logging
+                        println("Sent '$message' to channel '$channelId'")
+                    }
+                }
             }
         }
+
+
     }
 }
