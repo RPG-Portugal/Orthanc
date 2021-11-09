@@ -1,39 +1,37 @@
 package org.rpgportugal.configuration
 
-
-import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinFeature
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.LongSerializationPolicy
+import com.google.gson.ToNumberStrategy
+import com.google.gson.reflect.TypeToken
+import com.google.gson.stream.JsonReader
 import org.rpgportugal.configuration.exception.ConfigurationLoadingException
 import java.io.InputStream
-import kotlin.jvm.Throws
+import java.io.InputStreamReader
 
-class JsonConfiguration (vararg mds: com.fasterxml.jackson.databind.Module) : Configuration()  {
-    private val mapper: JsonMapper =
-        jacksonMapperBuilder()
-            .addModule(
-                KotlinModule.Builder()
-                    .withReflectionCacheSize(512)
-                    .configure(KotlinFeature.NullToEmptyCollection, false)
-                    .configure(KotlinFeature.NullToEmptyMap, false)
-                    .configure(KotlinFeature.NullIsSameAsDefault, false)
-                    .configure(KotlinFeature.SingletonSupport, true)
-                    .configure(KotlinFeature.StrictNullChecks, false)
-                    .build()
-            )
-            .addModules(*mds)
-            .build()
+object JsonConfiguration : Configuration()  {
+
+    private val gson =
+        GsonBuilder()
+            .setObjectToNumberStrategy { it.nextLong() }
+            .setPrettyPrinting()
+            .create();
 
     fun <T> readValue(filename: String, inputStream: InputStream, cls: Class<T>): T =
         try {
-            mapper.readValue(inputStream, cls)
+            val t = TypeToken.get(cls).type
+            val reader = JsonReader(InputStreamReader(inputStream))
+            gson.fromJson(reader, t)
         } catch (e: Exception) {
             throw ConfigurationLoadingException(filename, "Failed to deserialize resource", e)
         }
 
     @Throws(ConfigurationLoadingException::class)
-    inline fun <reified T> load(filename: String): T =
-        load (filename) { readValue(filename, it, T::class.java) }
-
+    inline fun <reified T> load(filename: String): T {
+        val cls = T::class.java
+        return load(filename) {
+            readValue(filename, it, cls)
+        }
+    }
 }
