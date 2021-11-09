@@ -1,5 +1,13 @@
 import org.junit.jupiter.api.Test
 
+class LoggerInCompanionObject : Logging {
+
+    fun log(s: String) {
+        logger().info(s)
+        log.info("With log val: $s")
+    }
+}
+
 internal class LoggerTest {
 
     @org.junit.jupiter.api.BeforeEach
