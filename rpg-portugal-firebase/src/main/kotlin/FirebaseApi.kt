@@ -16,7 +16,9 @@ class FirebaseApi private constructor(private val firebaseApp: FirebaseApp) {
         try {
             auth.createCustomToken(userId).let { Result.success(it) }
         } catch (t: Throwable) {
-            FirebaseApiException("Failed to create custom token", ErrorCode.FailedToCreateFirebaseCustomToken, t).let {  Result.failure(it)}
+            FirebaseApiException("Failed to create custom token", ErrorCode.FailedToCreateFirebaseCustomToken, t).let {
+                Result.failure(it)
+            }
         }
 
     // TODO: finish securing
