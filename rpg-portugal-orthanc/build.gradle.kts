@@ -28,16 +28,11 @@ dependencies {
     implementation("com.discord4j:discord4j-core:3.2.0")
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "16"
-    }
-}
-
-tasks{
+tasks {
     shadowJar {
         manifest {
             attributes(Pair("Main-Class", "org.rpgportugal.orthanc.BotKt"))
         }
     }
 }
+
