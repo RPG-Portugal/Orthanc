@@ -10,7 +10,7 @@ object Configuration {
 
     @Throws(ConfigurationLoadingException::class)
     fun loadDiscordToken(filename: String = "discord.json"): String =
-        ConfigFile.sensitive(filename).let { json.load<DiscordJsonConfiguration>(it).token }
+        ConfigFile.sensitive(filename).let { json.load<DiscordClientJsonConfiguration>(it).token }
 
     @Throws(ConfigurationLoadingException::class)
     fun loadSpamCatcher(filename: String = "spam-catcher.json"): SpamCatcherJsonConfig =
@@ -20,7 +20,3 @@ object Configuration {
     fun loadJobInfo(filename: String = "jobs.json"): List<JobInfo> =
         json.load<JobsJsonConfiguration>(filename).jobs
 }
-
-data class DiscordJsonConfiguration(val token: String)
-data class JobsJsonConfiguration(val jobs: List<JobInfo>)
-data class SpamCatcherJsonConfig(val trapChannelIds: List<Long>, val ignoreRoleIds: List<Long>, val linkPattern: String)

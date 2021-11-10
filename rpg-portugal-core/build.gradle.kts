@@ -1,13 +1,12 @@
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm")
 }
-
-
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
+    implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.4")
 }

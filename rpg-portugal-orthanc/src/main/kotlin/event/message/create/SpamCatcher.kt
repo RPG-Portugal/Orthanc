@@ -3,60 +3,82 @@ package org.rpgportugal.orthanc.event.message.create
 import discord4j.common.util.Snowflake
 import discord4j.core.GatewayDiscordClient
 import discord4j.core.event.domain.message.MessageCreateEvent
-import kotlinx.collections.immutable.PersistentSet
-import org.rpgportugal.logging.*
+import discord4j.core.spec.BanQuerySpec
+import org.rpgportugal.core.TextUtil
+import org.rpgportugal.logging.Logging
+import org.rpgportugal.logging.log
 import org.rpgportugal.orthanc.configuration.Configuration
-import org.rpgportugal.orthanc.event.Handler
+import org.rpgportugal.orthanc.util.Discord4JUtils.sendMessageToChannel
+import org.rpgportugal.orthanc.util.Discord4JUtils.sendPrivateMessage
+import org.rpgportugal.orthanc.util.Discord4JUtils.softBan
+import org.rpgportugal.orthanc.util.Discord4JUtils.toSnowflakeMap
 import org.rpgportugal.orthanc.util.Discord4JUtils.toSnowflakeSet
 
-class SpamCatcher private constructor(
+class SpamCatcher(
     private val regex: Regex,
-    private val trapChannelIds: PersistentSet<Snowflake>,
-    private val ignoreRoleIds: PersistentSet<Snowflake>) : Logging {
+    private val trapToWarnChannelMappings: Map<Snowflake, Snowflake>,
+    private val ignoreRoleIds: Set<Snowflake>,
+    private val messageToSend: String) : Logging {
 
     companion object {
-        private val CONFIGURATION = Configuration.loadSpamCatcher()
+        const val MEMBER_NAME_KEY          = ":name"
+        const val MEMBER_MENTION_KEY       = ":mention"
+        const val MESSAGE_CONTENT_KEY      = ":content"
+        const val MESSAGE_CONTENT_LINK_KEY = ":link"
+        const val CHANNEL_ID_KEY           = ":channelId"
 
-        private val LINK_REGEX = Regex(CONFIGURATION.linkPattern, setOf(RegexOption.IGNORE_CASE))
-        private val IGNORE_ROLE_IDS = CONFIGURATION.ignoreRoleIds.toSnowflakeSet()
-        private val TRAP_CHANNEL_IDS = CONFIGURATION.trapChannelIds.toSnowflakeSet()
+        fun fromConfiguration() : SpamCatcher {
+            val configuration = Configuration.loadSpamCatcher()
+            val linkRegex = Regex(configuration.linkPattern, setOf(RegexOption.IGNORE_CASE))
+            val ignoreRoleIds = configuration.ignoreRoleIds.toSnowflakeSet()
+            val trapChannelIds = configuration.trapWarnChannelPairs.toSnowflakeMap()
+            val messageTemplate = configuration.messageToSend
 
-        fun create(regex: Regex = LINK_REGEX,
-                   trapChannelIds: PersistentSet<Snowflake> = TRAP_CHANNEL_IDS,
-                   ignoreRoleIds: PersistentSet<Snowflake> = IGNORE_ROLE_IDS) : Handler<MessageCreateEvent> {
-            val catcher = SpamCatcher()
-            return { client, event ->  catcher.catch(client, event) }
+            return SpamCatcher(linkRegex, trapChannelIds, ignoreRoleIds, messageTemplate)
         }
 
     }
 
-    data class SpamInfo(val username: String,
-                        val discriminator: String,
-                        val link: String,
-                        val message: String,
-                        val channel: Snowflake)
-
-    private constructor() : this(LINK_REGEX, TRAP_CHANNEL_IDS, IGNORE_ROLE_IDS)
-
-    fun catch(client: GatewayDiscordClient, event: MessageCreateEvent) {
+    fun handle(client: GatewayDiscordClient, event: MessageCreateEvent) {
         val message = event.message
         val channelId = message.channelId
         val content = message.content
 
         if(message.author.isPresent) {
             val author = message.author.get()
-            val isTrapped = !author.isBot && trapChannelIds.contains(channelId)
-            if(isTrapped) {
+            val warnChannelId = trapToWarnChannelMappings[channelId]
+
+            if(!author.isBot && warnChannelId != null) {
+                val name = "${author.username}#${author.discriminator}"
+                log.info("User $name is trapped")
+                message.delete().subscribe {
+                    log.info("Message $content deleted from $name")
+                }
+
                 regex.find(content)?.value?.let { link ->
-                    val spamInfo = SpamInfo(
-                        author.username,
-                        author.discriminator,
-                        link,
-                        content,
-                        channelId)
+                    message.authorAsMember.subscribe { member ->
+                        val memberName = member.displayName
+                        val memberMention = member.mention
 
-                    log.info("$spamInfo")
+                        member.sendPrivateMessage(messageToSend) {
+                            log.info("send private message:\n\n'$messageToSend'\n\nto: '$memberMention'")
+                        }
 
+                        client.sendMessageToChannel(warnChannelId, "User $memberMention was banned for sending spam link `$link` in `$content`") {
+                            log.info("Sent message to warn channel:\n\n$messageToSend'\n\nto: '$memberMention'")
+                        }
+
+                        val memberRolesOnIgnoreList = ignoreRoleIds.intersect(member.roleIds)
+                        if(memberRolesOnIgnoreList.isEmpty()) {
+                            log.info("soft banning $memberName for spamming...")
+                            val banQuerySpec = BanQuerySpec.builder().deleteMessageDays(1).build();
+                            member.softBan(banQuerySpec) {
+                                log.info("$memberName was soft banned")
+                            }
+                        } else {
+                            log.info("member $memberName was on 'role ignore list' and will not be banned")
+                        }
+                    }
                 }
             }
         }

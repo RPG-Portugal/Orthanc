@@ -1,5 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm")
+    id("com.github.johnrengelman.shadow")
 }
 
 group = "org.rpgportugal"
@@ -25,4 +26,18 @@ dependencies {
     // annotationProcessor("com.google.dagger:dagger-compiler:2.40")
     // discord
     implementation("com.discord4j:discord4j-core:3.2.0")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "16"
+    }
+}
+
+tasks{
+    shadowJar {
+        manifest {
+            attributes(Pair("Main-Class", "org.rpgportugal.orthanc.BotKt"))
+        }
+    }
 }

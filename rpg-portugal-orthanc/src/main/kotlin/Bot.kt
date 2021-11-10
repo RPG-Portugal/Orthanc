@@ -5,11 +5,11 @@ import discord4j.core.GatewayDiscordClient
 import discord4j.core.event.domain.message.MessageCreateEvent
 import discord4j.gateway.intent.IntentSet
 import kotlinx.collections.immutable.persistentHashMapOf
-import org.rpgportugal.jobs.JobType
 import org.rpgportugal.jobs.Scheduling
 import org.rpgportugal.logging.getLogger
 import org.rpgportugal.orthanc.configuration.Configuration
 import org.rpgportugal.orthanc.event.Event.handle
+import org.rpgportugal.orthanc.event.message.create.SpamCatcher
 import org.rpgportugal.orthanc.exception.BotInitializationException
 import org.rpgportugal.orthanc.jobs.RemoveRolesJob
 import org.rpgportugal.orthanc.jobs.SendMessageJob
@@ -27,26 +27,24 @@ fun logInAsAdmin(token: String): GatewayDiscordClient {
 val token = Configuration.loadDiscordToken()
 val jobs = Configuration.loadJobInfo()
 
-class JobRegistry(client: GatewayDiscordClient) {
-    private val jobTypes: Map<String, JobType> = persistentHashMapOf(
-        "send-message" to SendMessageJob(client)::execute,
-        "remove-roles" to RemoveRolesJob(client)::execute
-    )
-
-    fun get(jobType: String): JobType? =
-        jobTypes[jobType]
-}
-
 fun main() {
 
     logger.info("Logging into discord...")
     val client = logInAsAdmin(token)
 
     logger.info("Initializing Event Handlers...")
-    client.handle<MessageCreateEvent> { logger.info("${it.message}") }
+    val spamCatcher = SpamCatcher.fromConfiguration()
+
+    client.handle<MessageCreateEvent> {
+        spamCatcher.handle(client, it)
+    }
 
     logger.info("Initializing Jobs...")
-    val registry = JobRegistry(client)
+    val registry = persistentHashMapOf(
+        "send-message" to SendMessageJob(client)::execute,
+        "remove-roles" to RemoveRolesJob(client)::execute
+    )
+
     jobs.forEach {
         logger.info("Scheduling ${it.type} job $it")
         Scheduling.schedule(it, registry::get)

@@ -16,7 +16,7 @@ object JsonConfiguration : Configuration()  {
         GsonBuilder()
             .setObjectToNumberStrategy { it.nextLong() }
             .setPrettyPrinting()
-            .create();
+            .create()
 
     fun <T> readValue(filename: String, inputStream: InputStream, cls: Class<T>): T =
         try {

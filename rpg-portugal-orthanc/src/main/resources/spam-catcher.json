@@ -1,0 +1,13 @@
+{
+  "trapWarnChannelPairs": [
+    [902263570874646608, 547408314737360896]
+  ],
+  "ignoreRoleIds": [
+    545569399352983574,
+    851930627523870720,
+    906140543736746004,
+    906138722771275836
+  ],
+  "linkPattern"   : "(http)(s*)://[A-Za-z]{2}\\S{0,}",
+  "messageToSend" : "Recebeste um \"soft ban\" devido **a tua conta ter sido potencialmente sido comprometida**. **Podes reentrar no servidor imediatamente** via https://rpgportugal.com/ dado que ligues o **two-factor autentication e mudes a password**"
+}
