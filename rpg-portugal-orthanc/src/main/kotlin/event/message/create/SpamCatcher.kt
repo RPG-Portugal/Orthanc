@@ -49,6 +49,7 @@ class SpamCatcher(
             val warnChannelId = trapToWarnChannelMappings[channelId]
 
             if(!author.isBot && warnChannelId != null) {
+                val guild = event.guild.block()
                 val name = "${author.username}#${author.discriminator}"
                 log.info("User $name is trapped")
                 message.delete().subscribe {
@@ -59,6 +60,7 @@ class SpamCatcher(
                     message.authorAsMember.subscribe { member ->
                         val memberName = member.displayName
                         val memberMention = member.mention
+                        val memberId = author.id
 
                         member.sendPrivateMessage(messageToSend) {
                             log.info("send private message:\n\n'$messageToSend'\n\nto: '$memberMention'")
@@ -68,16 +70,24 @@ class SpamCatcher(
                             log.info("Sent message to warn channel:\n\n$messageToSend'\n\nto: '$memberMention'")
                         }
 
-                        val memberRolesOnIgnoreList = ignoreRoleIds.intersect(member.roleIds)
-                        if(memberRolesOnIgnoreList.isEmpty()) {
-                            log.info("soft banning $memberName for spamming...")
-                            val banQuerySpec = BanQuerySpec.builder().deleteMessageDays(1).build();
-                            member.softBan(banQuerySpec) {
-                                log.info("$memberName was soft banned")
+                        guild?.let { guild ->
+                            val memberRolesOnIgnoreList = ignoreRoleIds.intersect(member.roleIds)
+                            if(memberRolesOnIgnoreList.isEmpty()) {
+                                log.info("soft banning $memberName for spamming...")
+                                val banQuerySpec =
+                                    BanQuerySpec.builder()
+                                        .deleteMessageDays(1)
+                                        .reason("Possible compromised account [Spam]")
+                                        .build()
+
+                                guild.softBan(memberId, banQuerySpec) {
+                                    log.info("$memberName was soft banned")
+                                }
+                            } else {
+                                log.info("member $memberName was on 'role ignore list' and will not be banned")
                             }
-                        } else {
-                            log.info("member $memberName was on 'role ignore list' and will not be banned")
                         }
+
                     }
                 }
             }

@@ -2,6 +2,7 @@ package org.rpgportugal.orthanc.util
 
 import discord4j.common.util.Snowflake
 import discord4j.core.GatewayDiscordClient
+import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.Member
 import discord4j.core.spec.BanQuerySpec
 import kotlinx.collections.immutable.PersistentMap
@@ -19,11 +20,13 @@ object Discord4JUtils {
         }
         .toMap()
 
-    fun Member.softBan(banQuerySpec: BanQuerySpec = BanQuerySpec.create(), callback: Runnable? = null) {
-        ban(banQuerySpec).subscribe {
-            unban().subscribe {
-                callback?.run()
-            }
+    fun Guild.softBan(memberId: Snowflake, banQuerySpec: BanQuerySpec = BanQuerySpec.create(), callback: Runnable? = null) {
+        try {
+            ban(memberId, banQuerySpec).block()
+            unban(memberId).block()
+            callback?.run()
+        } catch (e: Exception) {
+            println(e)
         }
     }
 
