@@ -1,12 +1,12 @@
-import {Client, Message, ThreadChannel} from "discord.js";
+import {Client, ClientOptions, Message, ThreadChannel} from "discord.js";
 import schedule from "node-schedule";
 import { logUnarchivedThreads, spamCatcher } from "./event/Event"
 import {cleanRolesFromAllMembers, startWarnSpamChannelJob} from "./job/Job";
-const { token, warnChannelId, clientOptions ,guildId, cleanRolesJob, warnSpamChannel} = require("./resources/config.json");
+import * as config from "./resources/config.json"
 
 async function main() {
-    const client = new Client(clientOptions);
-    await client.login(token);
+    const client = new Client(config.clientOptions as ClientOptions);
+    await client.login(config.token);
 
     client.on(
         "threadUpdate",
@@ -15,12 +15,12 @@ async function main() {
 
     client.on("messageCreate", (msg: Message) => spamCatcher(client, msg));
 
-    schedule.scheduleJob(cleanRolesJob.cron, async () => {
-        await cleanRolesFromAllMembers(client, guildId, cleanRolesJob.roles);
+    schedule.scheduleJob(config.cleanRolesJob.cron, async () => {
+        await cleanRolesFromAllMembers(client, config.guildId, config.cleanRolesJob.roles);
     });
 
-    schedule.scheduleJob(warnSpamChannel.cron, async () => {
-        await startWarnSpamChannelJob(client, warnSpamChannel.spamCatcherChannelId);
+    schedule.scheduleJob(config.warnSpamChannel.cron, async () => {
+        await startWarnSpamChannelJob(client, config.warnSpamChannel.spamCatcherChannelId);
     })
 
 
