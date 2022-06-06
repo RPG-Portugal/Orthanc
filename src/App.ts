@@ -1,5 +1,5 @@
 import {Client, Message, ThreadChannel} from "discord.js";
-import { logUnarchivedThreads, spamCatcher } from "./command/Command"
+import { logUnarchivedThreads, spamCatcher } from "./event/Event"
 import { startWarnSpamChannelJob } from "./job/Job";
 
 const { token, warnChannelId, clientOptions , spamCatcherChannelId} = require("./resources/config.json");
