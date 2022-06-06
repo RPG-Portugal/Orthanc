@@ -4,7 +4,7 @@ export async function startWarnSpamChannelJob(client: Client, channelId: Snowfla
     const channel = await client.channels.fetch(channelId);
     const message = "**NÃO ESCREVAM NESTE CANAL** Escrita neste canal resulta num soft ban! Isto é um canal anti-bots, mutem o canal por favor!";
     setInterval(
-        async () => (channel as TextChannel)?.send(message),
+        async () => await (channel as TextChannel)?.send(message),
         120000
     );
 }
