@@ -1,0 +1,10 @@
+{
+  "token": "",
+  "spamCatcherChannelId": "",
+  "guildId": "",
+  "linkRegex": "",
+  "warnChannelId": "",
+  "clientOptions": {
+    "intents": []
+  }
+}
