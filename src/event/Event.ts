@@ -40,20 +40,32 @@ export async function spamCatcher(client: Client, message: Message) {
         return;
     }
 
-    if (message.channelId != spamCatcherChannelId) {
-        console.log("Message is not spam channel.");
+    const id = author.id;
+
+    if (author.bot) {
+        console.log("Author is bot.");
         return;
     }
 
-    if (!linkRegExp.test(message.content)) {
+    if (message.channelId != spamCatcherChannelId) {
+        console.log("Message is not on spam catcher channel.");
+        return;
+    } else {
+        console.log("Deleting message...");
+        await message.delete();
+    }
+
+    const regExpArr = linkRegExp.exec(message.content);
+    if (regExpArr == null || regExpArr.length == 0) {
         console.log("Message does not contains link.");
         return;
     }
 
-    console.log(`Banning member ${author.username}.`);
-    const id = author.id;
-    
-    await log(client, `Soft banning ${message.author} for spamming link.`);
+    const links = regExpArr.join(", ");
+    const logMessage = `Soft banning ${author} for spamming links: ${links}.`
+
+    console.log(logMessage);
+    await log(client, `Soft banning ${author} for spamming links: ${links}.`);
 
     const banOptions: BanOptions = {
         days: 1,
