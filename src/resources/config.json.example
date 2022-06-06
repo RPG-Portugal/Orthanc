@@ -5,6 +5,19 @@
   "linkRegex": "",
   "warnChannelId": "",
   "clientOptions": {
-    "intents": []
+    "intents": [
+      "8",
+      "GUILD_PRESENCES", "GUILD_MEMBERS"
+    ]
+  },
+  "cleanRolesJob": {
+    "cron": "* * * * *",
+    "roles": [
+      "",""
+    ]
+  },
+  "warnSpamChannel": {
+    "cron": "*/2 * * * *",
+    "spamCatcherChannelId": ""
   }
 }
