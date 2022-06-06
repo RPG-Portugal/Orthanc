@@ -65,7 +65,7 @@ export async function spamCatcher(client: Client, message: Message) {
     const logMessage = `Soft banning ${author} for spamming links: ${links}.`
 
     console.log(logMessage);
-    await log(client, `Soft banning ${author} for spamming links: ${links}.`);
+    await log(client, logMessage);
 
     const banOptions: BanOptions = {
         days: 1,
