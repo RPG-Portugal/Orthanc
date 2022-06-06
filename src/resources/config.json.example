@@ -7,17 +7,24 @@
   "clientOptions": {
     "intents": [
       "8",
-      "GUILD_PRESENCES", "GUILD_MEMBERS"
+      "GUILD_PRESENCES",
+      "GUILD_MEMBERS"
     ]
   },
   "cleanRolesJob": {
     "cron": "* * * * *",
     "roles": [
-      "",""
+      "",
+      ""
     ]
   },
   "warnSpamChannel": {
     "cron": "*/2 * * * *",
     "spamCatcherChannelId": ""
+  },
+  "zestAwards": {
+    "threshold": 5,
+    "emoteName": "\uD83C\uDF4B",
+    "roleId": ""
   }
 }

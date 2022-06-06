@@ -1,4 +1,13 @@
-import {ThreadChannel, Message, Client, TextChannel, BanOptions} from "discord.js";
+import {
+    ThreadChannel,
+    Message,
+    Client,
+    TextChannel,
+    BanOptions,
+    MessageReaction,
+    User,
+    PartialMessageReaction, PartialUser
+} from "discord.js";
 
 const { spamCatcherChannelId, linkRegex, warnChannelId } = require("../resources/config.json");
 
@@ -24,6 +33,22 @@ export async function logUnarchivedThreads(client: Client, oldThread: ThreadChan
         console.log(message);
         await log(client, message);
     }
+}
+
+export async function awardZest(reaction: MessageReaction|PartialMessageReaction,
+                                user: User|PartialUser,
+                                threshold: number,
+                                emoteName: string,
+                                roleId: string) {
+    //Fail conditions
+    if(!roleId || !emoteName) return;
+    if(reaction.emoji.name != emoteName) return;
+    if((reaction.count || 0) < threshold) return;
+
+    const zestyRole = await reaction.message.guild?.roles.fetch(roleId);
+    if(!zestyRole) return;
+
+    await reaction.message.member?.roles.add(zestyRole);
 }
 
 export async function spamCatcher(client: Client, message: Message) {

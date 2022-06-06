@@ -1,6 +1,6 @@
 import {Client, ClientOptions, Message, ThreadChannel} from "discord.js";
 import schedule from "node-schedule";
-import { logUnarchivedThreads, spamCatcher } from "./event/Event"
+import {awardZest, logUnarchivedThreads, spamCatcher} from "./event/Event"
 import {cleanRolesFromAllMembers, startWarnSpamChannelJob} from "./job/Job";
 import * as config from "./resources/config.json"
 
@@ -23,6 +23,9 @@ async function main() {
         await startWarnSpamChannelJob(client, config.warnSpamChannel.spamCatcherChannelId);
     })
 
+    client.on("messageReactionAdd", async (reaction,user) => {
+        await awardZest(reaction, user, config.zestAwards.threshold, config.zestAwards.emoteName, config.zestAwards.roleId);
+    })
 
 }
 
