@@ -10,7 +10,7 @@
     "clean" : "rm -rf ./dist/",
     "prd": "npm run git-update-prd && npm run clean && npm ci && npm run compile && pm2 del orthanc && pm2 start dist/App.js --name orthanc && pm2 save",
     "start": "node ./dist/App.js",
-    "run-dev": "npm ci && npm run clean && npm run compile && npm run start",
+    "run-dev": "npm ci && npm run clean && npm run compile && npm run start"
   },
   "keywords": [],
   "author": "",
