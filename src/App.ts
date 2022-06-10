@@ -10,10 +10,11 @@ async function main() {
 
     client.on(
         "threadUpdate",
-        (oldThread: ThreadChannel, newThread: ThreadChannel) => logUnarchivedThreads(client, oldThread, newThread)
+        async (oldThread: ThreadChannel, newThread: ThreadChannel) =>
+            await logUnarchivedThreads(client, oldThread, newThread)
     );
 
-    client.on("messageCreate", (msg: Message) => spamCatcher(client, msg));
+    client.on("messageCreate",  async (msg: Message) => await spamCatcher(client, msg));
 
     schedule.scheduleJob(config.cleanRolesJob.cron, async () => {
         await cleanRolesFromAllMembers(client, config.guildId, config.cleanRolesJob.roles);
