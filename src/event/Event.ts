@@ -28,10 +28,12 @@ async function log(client: Client, message: string): Promise<Message | undefined
 }
 
 export async function logUnarchivedThreads(client: Client, oldThread: ThreadChannel, newThread: ThreadChannel) {
+    console.log(`Analizing thread: ${newThread.name} (${newThread.id})...`);
     if (oldThread.archived && !newThread.archived) {
         const message = `Thread <#${newThread.id}> was unarchived.`;
         console.log(message);
         await log(client, message);
+        console.log("Thread unarchived.");
     }
 }
 
