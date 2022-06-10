@@ -1,30 +1,27 @@
 {
   "token": "",
-  "spamCatcherChannelId": "",
-  "guildId": "",
+  "guildId": "545549902248149013",
   "linkRegex": "",
-  "warnChannelId": "",
+  "warnChannelId": "982758845661204500",
   "clientOptions": {
     "intents": [
-      "8",
-      "GUILD_PRESENCES",
-      "GUILD_MEMBERS"
+      "32767"
     ]
   },
   "cleanRolesJob": {
-    "cron": "* * * * *",
+    "cron": "0 5 * * *",
     "roles": [
-      "",
-      ""
+      "903020925757300736",
+      "869912722068869230"
     ]
   },
   "warnSpamChannel": {
     "cron": "*/2 * * * *",
-    "spamCatcherChannelId": ""
+    "spamCatcherChannelId": "902263570874646608"
   },
   "zestAwards": {
     "threshold": 5,
     "emoteName": "\uD83C\uDF4B",
-    "roleId": ""
+    "roleId": "903020925757300736"
   }
 }
