@@ -23,16 +23,15 @@ async function getWarnChannel(client: Client) : Promise<TextChannel | null> {
 }
 
 async function log(client: Client, message: string): Promise<Message | undefined> {
+    console.log(message);
     const chan = await getWarnChannel(client);
     return chan?.send(message);
 }
 
 export async function logUnarchivedThreads(client: Client, oldThread: ThreadChannel, newThread: ThreadChannel) {
-    console.log(`Analizing thread: ${newThread.name} (${newThread.id})...`);
+    console.log(`Analyzing thread: ${newThread.name} (${newThread.id})...`);
     if (oldThread.archived && !newThread.archived) {
-        const message = `Thread <#${newThread.id}> was unarchived.`;
-        console.log(message);
-        await log(client, message);
+        await log(client, `Thread <#${newThread.id}> was unarchived.`);
         console.log("Thread unarchived.");
     }
 }
@@ -89,10 +88,7 @@ export async function spamCatcher(client: Client, message: Message) {
     }
 
     const links = regExpArr.join(", ");
-    const logMessage = `Soft banning ${author} for spamming links: ${links}.`
-
-    console.log(logMessage);
-    await log(client, logMessage);
+    await log(client, `Soft banning ${author} for spamming links: ${links}.`);
 
     const banOptions: BanOptions = {
         days: 1,
