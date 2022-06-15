@@ -1,5 +1,5 @@
-import Module from "../module/Module";
-import * as config from "../resources/config.json"
+import Module from "../../module/Module";
+import * as config from "../../resources/config.json"
 import {Client, MessageReaction, PartialMessageReaction, PartialUser, User} from "discord.js";
 
 export default class RoleAwardModule implements Module {

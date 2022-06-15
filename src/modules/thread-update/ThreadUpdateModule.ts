@@ -1,7 +1,7 @@
-import Module from "../module/Module";
-import * as config from "../resources/config.json"
+import Module from "../../module/Module";
+import * as config from "../../resources/config.json"
 import {Client, ThreadChannel} from "discord.js";
-import log from "../event/Event";
+import log from "../../event/Event";
 
 export default class ThreadUpdateModule implements Module {
     client : Client|null = null

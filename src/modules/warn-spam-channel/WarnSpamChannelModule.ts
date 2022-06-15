@@ -1,6 +1,6 @@
-import Module from "../module/Module";
+import Module from "../../module/Module";
 import {Client, Snowflake, TextChannel} from "discord.js";
-import * as config from "../resources/config.json"
+import * as config from "../../resources/config.json"
 import schedule, {Job} from "node-schedule";
 
 export default class WarnSpamChannelModule implements Module {

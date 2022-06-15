@@ -1,7 +1,7 @@
-import Module from "../module/Module";
+import Module from "../../module/Module";
 import {BanOptions, Client, Message} from "discord.js";
-import * as config from "../resources/config.json";
-import log from "../event/Event";
+import * as config from "../../resources/config.json";
+import log from "../../event/Event";
 
 export default class SpamCatcherModule implements Module {
     client : Client|null = null

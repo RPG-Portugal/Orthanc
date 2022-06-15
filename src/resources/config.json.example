@@ -28,5 +28,8 @@
     "threshold": 5,
     "emoteName": "\uD83C\uDF4B",
     "roleId": "903020925757300736"
+  },
+  "diceParser": {
+    "enabled": true
   }
 }
