@@ -1,7 +1,6 @@
 {
   "token": "",
   "guildId": "545549902248149013",
-  "linkRegex": "",
   "warnChannelId": "982758845661204500",
   "clientOptions": {
     "intents": [
@@ -9,17 +8,23 @@
     ]
   },
   "cleanRolesJob": {
+    "enabled": true,
     "cron": "0 5 * * *",
     "roles": [
       "903020925757300736",
       "869912722068869230"
     ]
   },
+  "threadUpdate": {
+    "enabled": true
+  },
   "warnSpamChannel": {
     "cron": "*/2 * * * *",
-    "spamCatcherChannelId": "902263570874646608"
+    "spamCatcherChannelId": "902263570874646608",
+    "linkRegex": ""
   },
   "zestAwards": {
+    "enabled": true,
     "threshold": 5,
     "emoteName": "\uD83C\uDF4B",
     "roleId": "903020925757300736"
