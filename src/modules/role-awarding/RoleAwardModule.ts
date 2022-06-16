@@ -26,8 +26,10 @@ export default class RoleAwardModule implements Module {
                                     roleId: string) => {
         //Fail conditions
         if(!roleId || !emoteName) return;
-        if(reaction.emoji.name != emoteName) return;
-        if((reaction.count || 0) < threshold) return;
+        if(user.bot) return;
+        if(reaction.emoji.name != emoteName) return; // Emoji not right
+        if((reaction.count || 0) < threshold) return; // Not enough reactions
+        if(reaction.message.createdAt.getTime() < (Date.now() - 24*60*60*1000)) return; // More than 24h ago
 
         const zestyRole = await reaction.message.guild?.roles.fetch(roleId);
         if(!zestyRole) return;
