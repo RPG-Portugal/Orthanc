@@ -31,7 +31,7 @@ export default class DiceParserModule implements Module {
             const rollObject = this.diceRoller.roll(content);
             await msg.reply(this.renderer.render(rollObject))
         } catch (e) {
-            await msg.reply("???")
+            await msg.reply("https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-TypesOfDice")
         }
     }
 
