@@ -20,15 +20,15 @@ export default class ModuleEngine {
             console.log(`Initializing module: ${name}...`);
             module.autoInit(this.client, this.injector);
 
-            console.log(`Initializing module dependencies: ${name}...`);
+            console.log(`Initializing module dependencies...`);
             await module.init();
 
-            console.log(`Checking if module ${name} is active...`);
+            console.log(`Checking if module is active...`);
             if(module.isEnabled()) {
-                console.log(`Attaching module: ${name}...`);
+                console.log(`Attaching module...`);
                 await this.attachModule(module);
             } else {
-                console.log(`Module ${name} is disabled`);
+                console.log(`Module ${name} is disabled.`);
             }
         }
         return this;
