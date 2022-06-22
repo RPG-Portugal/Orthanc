@@ -1,5 +1,7 @@
 
 src/resources/config.json
+src/resources/local
+src/resources/env.json
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,webstorm+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,webstorm+all
