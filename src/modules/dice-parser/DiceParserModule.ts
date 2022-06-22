@@ -4,7 +4,6 @@ import AbstractModule from "../../module/AbstractModule";
 
 export default class DiceParserModule extends AbstractModule {
     private config!: any;
-
     private renderer = new DiscordRollRenderer();
     private diceRoller = new DiceRoller();
 
@@ -24,10 +23,11 @@ export default class DiceParserModule extends AbstractModule {
         return !!this.config && !!this.config.diceParser && !!this.config.diceParser.enabled;
     }
 
-    private listener = async (msg: Message) => await this.parseRoll(this.client!!, msg)
+    private listener = async (msg: Message) => await this.parseRoll(this.client, msg);
 
-    parseRoll = async (client: Client, msg: Message) => {
+    async parseRoll(client: Client, msg: Message) {
         if(!msg.content.startsWith("$roll")) return;
+
         const content = msg.content.replace("$roll", "").trim()
 
         try {
