@@ -3,7 +3,12 @@ import schedule, {Job} from "node-schedule";
 import AbstractModule from "../../module/AbstractModule";
 
 export default class WarnSpamChannelModule extends AbstractModule {
-    job: Job|null = null
+    private job!: Job | null;
+    private config!: any;
+
+    async init(): Promise<void> {
+        this.config = await this.injector.loadResource("config.json");
+    }
 
     attach(): void {
         this.job = schedule.scheduleJob(this.config.warnSpamChannel.cron, async () => {
@@ -12,7 +17,7 @@ export default class WarnSpamChannelModule extends AbstractModule {
     }
 
     detach(): void {
-        if ( !!this.job ) {
+        if (!!this.job) {
             this.job.cancel()
             this.job = null
         }

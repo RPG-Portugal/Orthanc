@@ -1,8 +1,13 @@
 import {Client, ThreadChannel} from "discord.js";
-import log from "../../event/Event";
+import log from "../../utils/Util";
 import AbstractModule from "../../module/AbstractModule";
 
 export default class ThreadUpdateModule extends AbstractModule {
+    private config: any;
+
+    async init(): Promise<void> {
+        this.config = await this.injector.loadResource("config.json");
+    }
 
     attach(): void {
         this.client.on("threadUpdate", this.listener )

@@ -3,40 +3,51 @@ import {Client} from "discord.js";
 import Injector from "../dependency/Injector";
 
 export default class ModuleEngine {
-    modules: Array<Module> = []
-    client: Client;
-    injector: Injector;
+    private modules: Array<Module> = []
+
+    private readonly client: Client;
+    private readonly injector: Injector;
 
     constructor(client: Client, injector: Injector) {
         this.client = client;
         this.injector = injector;
     }
 
-    async addModule(module:Module){
-        module.setClient(this.client)
-        module.setInjector(this.injector)
-        await module.init()
-        this.modules.push(module)
-    }
+    async start() : Promise<ModuleEngine> {
+        for (const module of this.modules) {
+            const name = module.constructor.name;
 
-    async removeModule(module:Module){
-        this.modules = this.modules.filter(m => m != module)
-    }
+            console.log(`Initializing module: ${name}...`);
+            module.autoInit(this.client, this.injector);
 
-    async attach(){
-        for (let module of this.modules) {
+            console.log(`Initializing module dependencies: ${name}...`);
+            await module.init();
+
+            console.log(`Checking if module ${name} is active...`);
             if(module.isEnabled()) {
-                console.log("Attaching module: " + module.constructor.name)
-                module.attach()
+                console.log(`Attaching module: ${name}...`);
+                await this.attachModule(module);
             } else {
-                console.log("Module is disabled")
-                console.dir(module.config)
+                console.log(`Module ${name} is disabled`);
             }
         }
+        return this;
     }
+
+    addModule(module:Module) : ModuleEngine {
+        this.modules.push(module)
+        return this;
+    }
+
+    removeModule(module:Module) : ModuleEngine {
+        this.modules = this.modules.filter(m => m != module)
+        return this;
+    }
+
     async attachModule(module: Module){
         module.attach()
     }
+
     async detach(){
         for (let module of this.modules) {
             module.detach()

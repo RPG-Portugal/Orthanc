@@ -8,16 +8,17 @@ import InjectorFactory from "./dependency/InjectorFactory";
 
 async function main() {
     const injector = InjectorFactory.create();
-    const client = await injector.createDiscordClient();
-    const moduleEngine = await injector.initializeModuleEngine(client);
+    const client = await injector.createLoggedClient();
+    const moduleEngine = injector.initializeModuleEngine(client);
 
-    await moduleEngine.addModule(new RoleCleanerModule())
-    await moduleEngine.addModule(new RoleAwardModule())
-    await moduleEngine.addModule(new WarnSpamChannelModule())
-    await moduleEngine.addModule(new ThreadUpdateModule())
-    await moduleEngine.addModule(new SpamCatcherModule())
-    await moduleEngine.addModule(new DiceParserModule())
-    await moduleEngine.attach()
+    await moduleEngine
+        .addModule(new RoleCleanerModule())
+        .addModule(new RoleAwardModule())
+        .addModule(new WarnSpamChannelModule())
+        .addModule(new ThreadUpdateModule())
+        .addModule(new SpamCatcherModule())
+        .addModule(new DiceParserModule())
+        .start()
 
 }
 

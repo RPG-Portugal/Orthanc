@@ -4,14 +4,13 @@ import Injector from "../dependency/Injector";
 export default interface Module {
     injector: Injector
     client: Client
-    config: any
-    init: () => void
-    attach: () => void
-    detach: () => void
-    isEnabled: () => boolean
 
-    setClient: (client: Client) => void
-    setInjector: (injector: Injector) => void
+    autoInit(client: Client, injector: Injector): void
+
+    init(): Promise<void>
+    attach(): void
+    detach() : void
+    isEnabled() : boolean
 }
 
 

@@ -3,8 +3,14 @@ import {DiceRoller, DiscordRollRenderer} from "dice-roller-parser";
 import AbstractModule from "../../module/AbstractModule";
 
 export default class DiceParserModule extends AbstractModule {
-    renderer = new DiscordRollRenderer();
-    diceRoller = new DiceRoller();
+    private config!: any;
+
+    private renderer = new DiscordRollRenderer();
+    private diceRoller = new DiceRoller();
+
+    async init() {
+        this.config = await this.injector.loadResource("config.json");
+    }
 
     attach(): void {
         this.client.on("messageCreate", this.listener)
@@ -18,7 +24,7 @@ export default class DiceParserModule extends AbstractModule {
         return !!this.config && !!this.config.diceParser && !!this.config.diceParser.enabled;
     }
 
-    listener = async (msg: Message) => await this.parseRoll(this.client!!, msg)
+    private listener = async (msg: Message) => await this.parseRoll(this.client!!, msg)
 
     parseRoll = async (client: Client, msg: Message) => {
         if(!msg.content.startsWith("$roll")) return;
@@ -31,6 +37,8 @@ export default class DiceParserModule extends AbstractModule {
             await msg.reply("https://help.roll20.net/hc/en-us/articles/360037773133-Dice-Reference#DiceReference-TypesOfDice")
         }
     }
+
+
 
 
 }

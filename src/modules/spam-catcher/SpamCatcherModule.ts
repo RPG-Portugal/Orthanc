@@ -1,13 +1,14 @@
 import {BanOptions, Client, Message} from "discord.js";
-import log from "../../event/Event";
+import log from "../../utils/Util";
 import AbstractModule from "../../module/AbstractModule";
 
 export default class SpamCatcherModule extends AbstractModule {
-    linkRegExp!: RegExp
+    private config!: any;
+    private linkRegExp!: RegExp;
 
     async init() {
-        await super.init()
-        this.linkRegExp = new RegExp(this.config.warnSpamChannel.linkRegex)
+        this.config = await this.injector.loadResource<any>("config.json");
+        this.linkRegExp = new RegExp(this.config.warnSpamChannel.linkRegex);
     }
 
     attach(): void {

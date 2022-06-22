@@ -1,27 +1,29 @@
 {
-  "guildId": "133647665283072000",
-  "warnChannelId": "372492853093466122",
+  "guildId": "545549902248149013",
+  "warnChannelId": "982758845661204500",
   "cleanRolesJob": {
-    "enabled": false,
-    "cron": "* * * * *",
+    "enabled": true,
+    "cron": "0 5 * * *",
     "roles": [
-      "240390740709081089","903020925757300736", "869912722068869230"
+      "903020925757300736",
+      "869912722068869230"
     ]
   },
   "threadUpdate": {
-    "enabled": false
+    "enabled": true
   },
   "warnSpamChannel": {
+    "enabled": true,
     "cron": "*/2 * * * *",
-    "spamCatcherChannelId": "",
-    "linkRegex": ""
+    "spamCatcherChannelId": "902263570874646608",
+    "linkRegex": "^(https?):\\/\\/[^\\s$.?#].[^\\s]*$"
   },
   "zestAwards": {
     "enabled": true,
-    "threshold": 1,
+    "threshold": 5,
     "emoteName": "\uD83C\uDF4B",
-    "roleId": "240390740709081089",
-    "superiorRoleId": "988769790040637440"
+    "roleId": "903020925757300736",
+    "superiorRoleId": "869912722068869230"
   },
   "diceParser": {
     "enabled": true

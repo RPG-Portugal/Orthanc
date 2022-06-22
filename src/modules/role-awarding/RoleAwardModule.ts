@@ -2,6 +2,12 @@ import {MessageReaction, PartialMessageReaction, PartialUser, User} from "discor
 import AbstractModule from "../../module/AbstractModule";
 
 export default class RoleAwardModule extends AbstractModule {
+    private config!: any;
+
+    async init(): Promise<void> {
+        this.config = await this.injector.loadResource<any>("config.json");
+    }
+
     attach(): void {
         this.client.on("messageReactionAdd", this.listener)
     }
@@ -19,10 +25,11 @@ export default class RoleAwardModule extends AbstractModule {
     }
 
     awardZest = async (reaction: MessageReaction|PartialMessageReaction,
-                                    user: User|PartialUser,
-                                    threshold: number,
-                                    emoteName: string,
-                                    roleId: string, superiorRoleId: string) => {
+                                 user: User|PartialUser,
+                                 threshold: number,
+                                 emoteName: string,
+                                 roleId: string,
+                                 superiorRoleId: string) => {
         //Fail conditions
         if(!roleId || !emoteName) return;
         if(user.bot) return;
@@ -40,11 +47,11 @@ export default class RoleAwardModule extends AbstractModule {
             }
         })
         if(roleUpgradeConfirmed) {
-            console.dir(`Awarding superior role to ${reaction.message.member?.user.username}`)
+            console.dir(`Awarding superior role to ${reaction.message.member?.user.username}`);
             zestyRole = await reaction.message.guild?.roles.fetch(superiorRoleId);
             if (!zestyRole) return;
         } else {
-            console.dir(`Awarding normal role to ${reaction.message.member?.user.username}`)
+            console.dir(`Awarding normal role to ${reaction.message.member?.user.username}`);
         }
 
         await reaction.message.member?.roles.add(zestyRole);

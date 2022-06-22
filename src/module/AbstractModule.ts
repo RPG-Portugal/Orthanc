@@ -2,27 +2,17 @@ import Module from "./Module";
 import {Client} from "discord.js";
 import Injector from "../dependency/Injector";
 
-export default abstract class AbstractModule implements Module{
-
+export default abstract class AbstractModule implements Module {
     client!: Client
     injector!: Injector
-    config: any
 
     abstract attach(): void;
     abstract detach(): void;
-
     abstract isEnabled(): boolean;
+    abstract init(): Promise<void>;
 
-    setClient(client: Client): void {
+    autoInit(client: Client, injector: Injector) {
         this.client = client;
-    }
-
-    setInjector(injector: Injector): void {
         this.injector = injector;
     }
-
-    async init() {
-        this.config = await this.injector.loadConfiguration("config.json")
-    }
-
 }
