@@ -1,38 +1,48 @@
 import Module from "./Module";
 import {Client} from "discord.js";
+import Injector from "../dependency/Injector";
 
 export default class ModuleEngine {
     modules: Array<Module> = []
     client: Client;
+    injector: Injector;
 
-    constructor(client: Client) {
+    constructor(client: Client, injector: Injector) {
         this.client = client;
+        this.injector = injector;
     }
 
-    addModule(module:Module){
+    async addModule(module:Module){
+        module.setClient(this.client)
+        module.setInjector(this.injector)
+        await module.init()
         this.modules.push(module)
     }
-    removeModule(module:Module){
+
+    async removeModule(module:Module){
         this.modules = this.modules.filter(m => m != module)
     }
 
-    attach(){
+    async attach(){
         for (let module of this.modules) {
             if(module.isEnabled()) {
                 console.log("Attaching module: " + module.constructor.name)
-                module.attach(this.client)
+                module.attach()
+            } else {
+                console.log("Module is disabled")
+                console.dir(module.config)
             }
         }
     }
-    attachModule(module: Module){
-        module.attach(this.client)
+    async attachModule(module: Module){
+        module.attach()
     }
-    detach(){
+    async detach(){
         for (let module of this.modules) {
-            module.detach(this.client)
+            module.detach()
         }
     }
-    detachModule(module: Module){
-        module.detach(this.client)
+    async detachModule(module: Module){
+        module.detach()
     }
 }

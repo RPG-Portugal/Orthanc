@@ -1,19 +1,17 @@
-import Module from "../../module/Module";
 import {Client, Role} from "discord.js";
-import * as config from "../../resources/config.json"
 import schedule, {Job} from "node-schedule";
+import AbstractModule from "../../module/AbstractModule";
 
-export default class RoleCleanerModule implements Module {
-
+export default class RoleCleanerModule extends AbstractModule {
     job: Job|null = null
 
-    attach = (client: Client ) => {
-        this.job = schedule.scheduleJob(config.cleanRolesJob.cron, async () => {
-            await this.cleanRolesFromAllMembers(client, config.guildId, config.cleanRolesJob.roles);
+    attach():void {
+        this.job = schedule.scheduleJob(this.config.cleanRolesJob.cron, async () => {
+            await this.cleanRolesFromAllMembers(this.client, this.config.guildId, this.config.cleanRolesJob.roles);
         });
     };
 
-    detach(client: Client): void {
+    detach(): void {
         if ( !!this.job ) {
             this.job.cancel()
             this.job = null
@@ -21,7 +19,7 @@ export default class RoleCleanerModule implements Module {
     }
 
     isEnabled(): boolean {
-        return !!config && !!config.cleanRolesJob && config.cleanRolesJob.enabled;
+        return !!this.config && !!this.config.cleanRolesJob && this.config.cleanRolesJob.enabled;
     }
 
     cleanRolesFromAllMembers = async (client: Client, guildId: string, roleIds: Array<string>) => {

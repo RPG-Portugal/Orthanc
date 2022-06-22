@@ -1,18 +1,17 @@
-import Module from "../../module/Module";
 import {Client, Snowflake, TextChannel} from "discord.js";
-import * as config from "../../resources/config.json"
 import schedule, {Job} from "node-schedule";
+import AbstractModule from "../../module/AbstractModule";
 
-export default class WarnSpamChannelModule implements Module {
+export default class WarnSpamChannelModule extends AbstractModule {
     job: Job|null = null
 
-    attach(client: Client): void {
-        this.job = schedule.scheduleJob(config.warnSpamChannel.cron, async () => {
-            await this.startWarnSpamChannelJob(client, config.warnSpamChannel.spamCatcherChannelId);
+    attach(): void {
+        this.job = schedule.scheduleJob(this.config.warnSpamChannel.cron, async () => {
+            await this.startWarnSpamChannelJob(this.client, this.config.warnSpamChannel.spamCatcherChannelId);
         })
     }
 
-    detach(client: Client): void {
+    detach(): void {
         if ( !!this.job ) {
             this.job.cancel()
             this.job = null
@@ -20,7 +19,7 @@ export default class WarnSpamChannelModule implements Module {
     }
 
     isEnabled(): boolean {
-        return !!config && !!config.warnSpamChannel && !!config.warnSpamChannel.spamCatcherChannelId;
+        return !!this.config && !!this.config.warnSpamChannel && !!this.config.warnSpamChannel.spamCatcherChannelId;
     }
 
     startWarnSpamChannelJob = async (client: Client, channelId: Snowflake) => {

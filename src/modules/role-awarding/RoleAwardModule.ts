@@ -1,22 +1,21 @@
-import Module from "../../module/Module";
-import * as config from "../../resources/config.json"
-import {Client, MessageReaction, PartialMessageReaction, PartialUser, User} from "discord.js";
+import {MessageReaction, PartialMessageReaction, PartialUser, User} from "discord.js";
+import AbstractModule from "../../module/AbstractModule";
 
-export default class RoleAwardModule implements Module {
-    attach(client: Client): void {
-        client.on("messageReactionAdd", this.listener)
+export default class RoleAwardModule extends AbstractModule {
+    attach(): void {
+        this.client.on("messageReactionAdd", this.listener)
     }
 
-    detach(client: Client): void {
-        client.off("messageReactionAdd", this.listener)
+    detach(): void {
+        this.client.off("messageReactionAdd", this.listener)
     }
 
     isEnabled(): boolean {
-        return !!config && !!config.zestAwards &&config.zestAwards.enabled;
+        return !!this.config && !!this.config.zestAwards && this.config.zestAwards.enabled;
     }
 
     listener = async (reaction: MessageReaction|PartialMessageReaction,user : User|PartialUser) => {
-        await this.awardZest(reaction, user, config.zestAwards.threshold, config.zestAwards.emoteName, config.zestAwards.roleId, config.zestAwards.superiorRoleId);
+        await this.awardZest(reaction, user, this.config.zestAwards.threshold, this.config.zestAwards.emoteName, this.config.zestAwards.roleId, this.config.zestAwards.superiorRoleId);
     }
 
     awardZest = async (reaction: MessageReaction|PartialMessageReaction,

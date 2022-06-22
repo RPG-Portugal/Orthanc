@@ -1,23 +1,25 @@
-import Module from "../../module/Module";
 import {BanOptions, Client, Message} from "discord.js";
-import * as config from "../../resources/config.json";
 import log from "../../event/Event";
+import AbstractModule from "../../module/AbstractModule";
 
-export default class SpamCatcherModule implements Module {
-    client : Client|null = null
-    linkRegExp = new RegExp(config.warnSpamChannel.linkRegex)
+export default class SpamCatcherModule extends AbstractModule {
+    linkRegExp!: RegExp
 
-    attach(client: Client): void {
-        this.client = client;
-        client.on("messageCreate", this.listener )
+    async init() {
+        await super.init()
+        this.linkRegExp = new RegExp(this.config.warnSpamChannel.linkRegex)
     }
 
-    detach(client: Client): void {
-        client.off("messageCreate", this.listener)
+    attach(): void {
+        this.client.on("messageCreate", this.listener)
+    }
+
+    detach(): void {
+        this.client.off("messageCreate", this.listener)
     }
 
     isEnabled(): boolean {
-        return !!config && !!config.warnSpamChannel && !!config.warnSpamChannel.spamCatcherChannelId;
+        return !!this.config && !!this.config.warnSpamChannel && !!this.config.warnSpamChannel.spamCatcherChannelId;
     }
 
     listener = async (msg: Message) => await this.spamCatcher(this.client!!, msg)
@@ -43,7 +45,7 @@ export default class SpamCatcherModule implements Module {
             return;
         }
 
-        if (message.channelId != config.warnSpamChannel.spamCatcherChannelId) {
+        if (message.channelId != this.config.warnSpamChannel.spamCatcherChannelId) {
             console.log("Message is not on spam catcher channel.");
             return;
         } else {
@@ -58,7 +60,7 @@ export default class SpamCatcherModule implements Module {
         }
 
         const links = regExpArr.join(", ");
-        await log(client, `Soft banning ${author} for spamming links: ${links}.`);
+        await log(client, `Soft banning ${author} for spamming links: ${links}.`, this.config.warnChannelId);
 
         const banOptions: BanOptions = {
             days: 1,

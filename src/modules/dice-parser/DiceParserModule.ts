@@ -1,24 +1,21 @@
-import Module from "../../module/Module";
-import * as config from "../../resources/config.json"
 import {Client, Message} from "discord.js";
 import {DiceRoller, DiscordRollRenderer} from "dice-roller-parser";
+import AbstractModule from "../../module/AbstractModule";
 
-export default class DiceParserModule implements Module {
-    client: Client|null = null
+export default class DiceParserModule extends AbstractModule {
     renderer = new DiscordRollRenderer();
     diceRoller = new DiceRoller();
 
-    attach(client: Client): void {
-        this.client = client
-        client.on("messageCreate", this.listener)
+    attach(): void {
+        this.client.on("messageCreate", this.listener)
     }
 
-    detach(client: Client): void {
-        client.off("messageCreate", this.listener)
+    detach(): void {
+        this.client.off("messageCreate", this.listener)
     }
 
     isEnabled(): boolean {
-        return !!config && !!config.diceParser && config.diceParser.enabled;
+        return !!this.config && !!this.config.diceParser && !!this.config.diceParser.enabled;
     }
 
     listener = async (msg: Message) => await this.parseRoll(this.client!!, msg)
