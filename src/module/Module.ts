@@ -4,6 +4,7 @@ import Injector from "../dependency/Injector";
 export default interface Module {
     injector: Injector
     client: Client
+    config: any
 
     autoInit(client: Client, injector: Injector): void
 
