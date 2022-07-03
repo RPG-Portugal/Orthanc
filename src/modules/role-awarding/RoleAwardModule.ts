@@ -16,7 +16,7 @@ export default class RoleAwardModule extends AbstractModule {
     }
 
     listener = async (reaction: MessageReaction|PartialMessageReaction,user : User|PartialUser) => {
-        await this.awardZest(reaction, user, this.config.zestAwards.threshold, this.config.zestAwards.emoteName, this.config.zestAwards.roleId, this.config.zestAwards.superiorRoleId);
+        await this.awardZest(reaction, user, this.config.threshold, this.config.emoteName, this.config.roleId, this.config.superiorRoleId);
     }
 
     getConfigName(): string {
