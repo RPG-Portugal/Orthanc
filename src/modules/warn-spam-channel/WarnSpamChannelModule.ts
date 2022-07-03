@@ -4,11 +4,6 @@ import AbstractModule from "../../module/AbstractModule";
 
 export default class WarnSpamChannelModule extends AbstractModule {
     private job!: Job | null;
-    private config!: any;
-
-    async init(): Promise<void> {
-        this.config = await this.injector.loadResource("config.json");
-    }
 
     attach(): void {
         this.job = schedule.scheduleJob(this.config.warnSpamChannel.cron, async () => {

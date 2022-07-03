@@ -3,11 +3,10 @@ import log from "../../utils/Util";
 import AbstractModule from "../../module/AbstractModule";
 
 export default class SpamCatcherModule extends AbstractModule {
-    private config!: any;
     private linkRegExp!: RegExp;
 
     async init() {
-        this.config = await this.injector.loadResource<any>("config.json");
+        await super.init()
         this.linkRegExp = new RegExp(this.config.warnSpamChannel.linkRegex);
     }
 

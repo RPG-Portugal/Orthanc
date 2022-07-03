@@ -3,12 +3,7 @@ import schedule, {Job} from "node-schedule";
 import AbstractModule from "../../module/AbstractModule";
 
 export default class RoleCleanerModule extends AbstractModule {
-    private config!: any;
     private job: Job | null = null;
-
-    async init() {
-        this.config = await this.injector.loadResource("config.json");
-    }
 
     attach():void {
         this.job = schedule.scheduleJob(this.config.cleanRolesJob.cron, async () => {

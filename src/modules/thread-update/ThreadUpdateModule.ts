@@ -3,11 +3,6 @@ import log from "../../utils/Util";
 import AbstractModule from "../../module/AbstractModule";
 
 export default class ThreadUpdateModule extends AbstractModule {
-    private config: any;
-
-    async init(): Promise<void> {
-        this.config = await this.injector.loadResource("config.json");
-    }
 
     attach(): void {
         this.client.on("threadUpdate", this.listener )
@@ -22,7 +17,7 @@ export default class ThreadUpdateModule extends AbstractModule {
     }
 
     listener = async (oldThread: ThreadChannel, newThread: ThreadChannel) =>
-        await this.logUnarchivedThreads(this.client!!, oldThread, newThread)
+        this.logUnarchivedThreads(this.client!!, oldThread, newThread)
 
 
     logUnarchivedThreads = async (client: Client, oldThread: ThreadChannel, newThread: ThreadChannel) => {

@@ -3,13 +3,8 @@ import {DiceRoller, DiscordRollRenderer} from "dice-roller-parser";
 import AbstractModule from "../../module/AbstractModule";
 
 export default class DiceParserModule extends AbstractModule {
-    private config!: any;
     private renderer = new DiscordRollRenderer();
     private diceRoller = new DiceRoller();
-
-    async init() {
-        this.config = await this.injector.loadResource("config.json");
-    }
 
     attach(): void {
         this.client.on("messageCreate", this.listener)

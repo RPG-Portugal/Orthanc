@@ -2,11 +2,6 @@ import {MessageReaction, PartialMessageReaction, PartialUser, User} from "discor
 import AbstractModule from "../../module/AbstractModule";
 
 export default class RoleAwardModule extends AbstractModule {
-    private config!: any;
-
-    async init(): Promise<void> {
-        this.config = await this.injector.loadResource<any>("config.json");
-    }
 
     attach(): void {
         this.client.on("messageReactionAdd", this.listener)

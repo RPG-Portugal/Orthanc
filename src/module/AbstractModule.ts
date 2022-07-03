@@ -5,19 +5,20 @@ import Injector from "../dependency/Injector";
 export default abstract class AbstractModule implements Module {
     client!: Client
     injector!: Injector
+    config!: any;
 
     abstract attach(): void;
     abstract detach(): void;
     abstract isEnabled(): boolean;
-    abstract init(): Promise<void>;
 
     autoInit(client: Client, injector: Injector) {
         this.client = client;
         this.injector = injector;
     }
 
-    async loadConfig(fileName: string): Promise<unknown> {
-        return this.injector.loadConfiguration(fileName)
+    async loadConfig(): Promise<void> {
+        console.log(`Loading config ${this.getConfigName()}`)
+        this.config = this.injector.loadResource<any>(this.getConfigName());
     }
 
     getConfigName(): string {
@@ -25,8 +26,7 @@ export default abstract class AbstractModule implements Module {
     }
 
     async init() {
-        console.log(`Loading config ${this.getConfigName()}`)
-        this.config = await this.loadConfig(this.getConfigName())
+         await this.loadConfig()
     }
 
 }
