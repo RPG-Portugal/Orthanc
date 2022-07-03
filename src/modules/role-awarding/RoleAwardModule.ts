@@ -17,11 +17,15 @@ export default class RoleAwardModule extends AbstractModule {
     }
 
     isEnabled(): boolean {
-        return !!this.config && !!this.config.zestAwards && this.config.zestAwards.enabled;
+        return !!this.config && !!this.config.enabled;
     }
 
     listener = async (reaction: MessageReaction|PartialMessageReaction,user : User|PartialUser) => {
         await this.awardZest(reaction, user, this.config.zestAwards.threshold, this.config.zestAwards.emoteName, this.config.zestAwards.roleId, this.config.zestAwards.superiorRoleId);
+    }
+
+    getConfigName(): string {
+        return "roleAwardingConfig.json";
     }
 
     awardZest = async (reaction: MessageReaction|PartialMessageReaction,

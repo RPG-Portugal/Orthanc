@@ -14,7 +14,7 @@ export default class RoleCleanerModule extends AbstractModule {
         this.job = schedule.scheduleJob(this.config.cleanRolesJob.cron, async () => {
             await this.cleanRolesFromAllMembers(this.client, this.config.guildId, this.config.cleanRolesJob.roles);
         });
-    };
+    }
 
     detach(): void {
         if (!!this.job) {
@@ -23,8 +23,12 @@ export default class RoleCleanerModule extends AbstractModule {
         }
     }
 
+    getConfigName(): string {
+        return "roleCleanerConfig.json";
+    }
+
     isEnabled(): boolean {
-        return !!this.config && !!this.config.cleanRolesJob && this.config.cleanRolesJob.enabled;
+        return !!this.config && !!this.config.enabled;
     }
 
     cleanRolesFromAllMembers = async (client: Client, guildId: string, roleIds: Array<string>) => {

@@ -15,4 +15,18 @@ export default abstract class AbstractModule implements Module {
         this.client = client;
         this.injector = injector;
     }
+
+    async loadConfig(fileName: string): Promise<unknown> {
+        return this.injector.loadConfiguration(fileName)
+    }
+
+    getConfigName(): string {
+        return "config.json";
+    }
+
+    async init() {
+        console.log(`Loading config ${this.getConfigName()}`)
+        this.config = await this.loadConfig(this.getConfigName())
+    }
+
 }

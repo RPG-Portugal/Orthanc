@@ -19,8 +19,12 @@ export default class DiceParserModule extends AbstractModule {
         this.client.off("messageCreate", this.listener)
     }
 
+    getConfigName(): string {
+        return "diceParserConfig.json";
+    }
+
     isEnabled(): boolean {
-        return !!this.config && !!this.config.diceParser && !!this.config.diceParser.enabled;
+        return !!this.config && !!this.config.enabled;
     }
 
     private listener = async (msg: Message) => await this.parseRoll(this.client, msg);
