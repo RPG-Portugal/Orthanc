@@ -18,12 +18,8 @@ export default class RoleCleanerModule extends AbstractModule {
         }
     }
 
-    getConfigName(): string {
-        return "roleCleanerConfig.json";
-    }
-
     isEnabled(): boolean {
-        return !!this.config && !!this.config.enabled;
+        return !!this.config && !!this.config.cleanRolesJob && !!this.config.cleanRolesJob.enabled;
     }
 
     cleanRolesFromAllMembers = async (client: Client, guildId: string, roleIds: Array<string>) => {
