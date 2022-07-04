@@ -34,7 +34,8 @@ export default class SpamCatcherModule extends AbstractModule {
         }
 
         if (author == null || author.bot) {
-            console.log("Author missing or is bot.");
+            //TODO: Consider if we want/need this log
+            //console.log("Author missing or is bot.");
             return;
         }
 
@@ -46,7 +47,8 @@ export default class SpamCatcherModule extends AbstractModule {
         }
 
         if (message.channelId != this.config.warnSpamChannel.spamCatcherChannelId) {
-            console.log("Message is not on spam catcher channel.");
+            //TODO: Consider if we want/need this log
+            //console.log("Message is not on spam catcher channel.");
             return;
         } else {
             console.log("Deleting message...");
