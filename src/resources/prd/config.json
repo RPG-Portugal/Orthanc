@@ -9,5 +9,13 @@
     "cron": "*/2 * * * *",
     "spamCatcherChannelId": "902263570874646608",
     "linkRegex": "^(https?):\\/\\/[^\\s$.?#].[^\\s]*$"
+  },
+  "cleanRolesJob": {
+    "enabled": true,
+    "cron": "0 5 * * *",
+    "roles": [
+      "903020925757300736",
+      "869912722068869230"
+    ]
   }
 }
