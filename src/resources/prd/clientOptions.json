@@ -1,5 +1,11 @@
 {
-  "intents": [
-    "32767"
-  ]
+    "intents": [
+        "DIRECT_MESSAGES",
+        "GUILDS",
+        "GUILD_BANS",
+        "GUILD_MESSAGES"
+    ],
+    "partials": [
+        "CHANNEL"
+    ]
 }
