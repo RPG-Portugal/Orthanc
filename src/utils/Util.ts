@@ -1,9 +1,9 @@
-import {Client, Message, Snowflake, TextChannel} from "discord.js";
+import {Client, Message, Snowflake, TextChannel, ChannelType} from "discord.js";
 
 
 async function getWarnChannel(client: Client, warnChannelId: Snowflake) : Promise<TextChannel | null> {
     const chan = await client.channels.fetch(warnChannelId)
-    if (chan?.isText) {
+    if (chan?.type == ChannelType.GuildText) {
         return chan as TextChannel;
     } else {
         return null;
