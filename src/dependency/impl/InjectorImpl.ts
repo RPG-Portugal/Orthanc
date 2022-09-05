@@ -9,8 +9,10 @@ export default class InjectorImpl implements Injector {
         return new ModuleEngine(client, this);
     }
 
-    async createLoggedClient() : Promise<Client> {
+    async createAndLoginClient() : Promise<Client> {
         const clientOptions = this.loadResource<ClientOptions>("clientOptions.json");
+        console.log(`client options: ${clientOptions}`)
+        
         const client = new Client(clientOptions);
         await client.login(env.token);
         return client;

@@ -8,7 +8,7 @@ import InjectorFactory from "./dependency/InjectorFactory";
 
 async function main() {
     const injector = InjectorFactory.create();
-    const client = await injector.createLoggedClient();
+    const client = await injector.createAndLoginClient();
     const moduleEngine = injector.initializeModuleEngine(client);
 
     await moduleEngine
