@@ -65,7 +65,7 @@ export default class SpamCatcherModule extends AbstractModule {
         await log(client, `Soft banning ${author} for spamming links: ${links}.`, this.config.warnChannelId);
 
         const banOptions: BanOptions = {
-            days: 1,
+            deleteMessageDays: 1,
             reason: "Sent link on spamming channel."
         }
 
