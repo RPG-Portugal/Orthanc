@@ -6,10 +6,11 @@ export default class RoleCleanerModule extends AbstractModule {
     private job: Job | null = null;
 
     attach():void {
-        console.log("Hello, I've been attached.")
-        this.job = schedule.scheduleJob(this.config.cleanRolesJob.cron, async () => {
-            console.log("Hello, I've run.")
-            await this.cleanRolesFromAllMembers(this.client, this.config.guildId, this.config.cleanRolesJob.roles);
+        const cronExpr = this.config.cleanRolesJob.cron;
+        this.job = schedule.scheduleJob(cronExpr, async () => {
+            const guildId = this.config.guildId;
+            const roles = this.config.cleanRolesJob.roles;
+            await this.cleanRolesFromAllMembers(this.client, guildId, roles);
         });
     }
 
@@ -25,30 +26,34 @@ export default class RoleCleanerModule extends AbstractModule {
     }
 
     cleanRolesFromAllMembers = async (client: Client, guildId: string, roleIds: Array<string>) => {
-        console.log("Starting role cleanup")
+        console.log("Fetching roles to clean...")
+
         const guild = await client.guilds.fetch(guildId);
-        await guild?.members.fetch();
+        console.log("Guild=", guild)
+
+        await guild.members.fetch();
+
         const roles : Array<Role> = [];
         for (const rId of roleIds) {
-            console.log("Parsing "+rId)
-            console.log("guild", guild)
+            console.log("RoleId=", rId)
+
             const role = await guild?.roles.fetch(rId);
-            console.log("role?",role);
+            console.log("Role=", role);
             if (!!role){
                 roles.push(role);
             }
         }
-        console.log("Phase 2")
-        roles.forEach( role => {
-            let i = 0;
-            console.log("Iterating "+role);
-            role?.members?.forEach( (member, index) => {
-                console.log("Iterating m: "+member.nickname + " == " + index);
-                i++;
+        console.log("Role cleanup phase...")
+
+        roles.forEach(role => {
+            console.log("Cleaning role: ", role);
+            role?.members?.map((v) => v).forEach((member, index) => {
+                console.log(`Cleaning role for member ${index}: ${member.displayName}`);
+                const delay = index * 500;
                 setTimeout( () => {
-                    console.log(`Removing role ${role.name} from ${member.nickname}`);
+                    console.log(`Removing role ${role.name} from ${member.displayName}`);
                     member.roles.remove(role)
-                }, i*500)
+                }, delay)
             })
         })
     }

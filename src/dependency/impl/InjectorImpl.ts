@@ -1,5 +1,5 @@
 import Injector from "../Injector";
-import { Client, ClientOptions } from "discord.js";
+import {Client, ClientOptions} from "discord.js";
 import ModuleEngine from "../../module/ModuleEngine";
 import * as env from "../../resources/env.json";
 
@@ -11,7 +11,7 @@ export default class InjectorImpl implements Injector {
 
     async createAndLoginClient() : Promise<Client> {
         const clientOptions = this.loadResource<ClientOptions>("clientOptions.json");
-        console.log(`client options: ${clientOptions}`)
+        console.log("loaded client options: ", clientOptions)
         
         const client = new Client(clientOptions);
         await client.login(env.token);
