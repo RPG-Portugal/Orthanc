@@ -1,5 +1,5 @@
 import Injector from "../Injector";
-import {Client, ClientOptions} from "discord.js";
+import {Client, ClientOptions, IntentsBitField} from "discord.js";
 import ModuleEngine from "../../module/ModuleEngine";
 import * as env from "../../resources/env.json";
 
@@ -11,6 +11,7 @@ export default class InjectorImpl implements Injector {
 
     async createLoggedClient() : Promise<Client> {
         const clientOptions = this.loadResource<ClientOptions>("clientOptions.json");
+        IntentsBitField.Flags.GuildVoiceStates
         const client = new Client(clientOptions);
         await client.login(env.token);
         return client;

@@ -1,28 +1,4 @@
 {
-    "intents": [
-        "GUILDS",
-        "GUILD_MEMBERS",
-        "GUILD_BANS",
-        "GUILD_EMOJIS_AND_STICKERS",
-        "GUILD_INTEGRATIONS",
-        "GUILD_WEBHOOKS",
-        "GUILD_INVITES",
-        "GUILD_VOICE_STATES",
-        "GUILD_PRESENCES",
-        "GUILD_MESSAGES",
-        "GUILD_MESSAGE_REACTIONS",
-        "GUILD_MESSAGE_TYPING",
-        "DIRECT_MESSAGES",
-        "DIRECT_MESSAGE_REACTIONS",
-        "DIRECT_MESSAGE_TYPING",
-        "GUILD_SCHEDULED_EVENTS"
-    ],
-    "partials" : [
-        "USER",
-        "CHANNEL" ,
-        "GUILD_MEMBER" ,
-        "MESSAGE" ,
-        "REACTION" ,
-        "GUILD_SCHEDULED_EVENT"
-    ]
+    "intents": [ 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536 ],
+    "partials" : [ 0,1,2,3,4,5,6 ]
 }
