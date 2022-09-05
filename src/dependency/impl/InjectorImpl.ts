@@ -1,5 +1,5 @@
 import Injector from "../Injector";
-import {Client, ClientOptions} from "discord.js";
+import { Client, ClientOptions } from "discord.js";
 import ModuleEngine from "../../module/ModuleEngine";
 import * as env from "../../resources/env.json";
 
