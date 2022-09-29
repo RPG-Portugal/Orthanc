@@ -8,7 +8,8 @@
     "git-update-prd": "git pull origin main",
     "compile": "npx tsc",
     "clean": "rm -rf ./dist/",
-    "prd": "npm run git-update-prd && npm run clean && npm ci && npm run compile && pm2 del orthanc && pm2 start dist/App.js --name orthanc --log-date-format 'DD-MM-YYYY HH:mm:ss.SSS' && pm2 save",
+    "start-pm2" : "pm2 del orthanc && pm2 start dist/App.js --name orthanc --log-date-format 'DD-MM-YYYY HH:mm:ss.SSS' && pm2 save",
+    "prd": "npm run git-update-prd && npm run clean && npm ci && npm run compile && npm run start-pm2",
     "start": "node ./dist/App.js",
     "run-dev": "npm ci && npm run clean && npm run compile && npm run start",
     "quick-run": "npm run compile && npm run start"
